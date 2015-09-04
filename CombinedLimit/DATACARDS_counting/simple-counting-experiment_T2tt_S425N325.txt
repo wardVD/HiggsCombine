@@ -1,0 +1,20 @@
+# Simple counting experiment, with one signal and a few background processes
+
+imax  1  number of channels
+jmax  5  number of backgrounds
+kmax  3  number of nuisance parameters (sources of systematic uncertainties)
+--------------------
+#counting experiment->integral->single bin
+bin           1
+observation   168.0
+
+--------------------
+bin                 1                   1                   1                   1                   1                   1          
+process       T2tt_S425N325            dy                others                qcd                 tt                 wjets        
+process             0                   1                   2                   3                   4                   5          
+rate         0.0924165631786      34.9239478085       8.19527445981       42.6691002367       287.184302881      0.156837391376    
+
+--------------------
+signal	lnN	   1.2   -   -   -   -   -   
+bkg	lnN	   -   1.3  1.3  1.3  1.3  1.3  
+lumi	lnN	   1.12   1.12   1.12   1.12   1.12   1.12   
