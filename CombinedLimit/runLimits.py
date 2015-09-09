@@ -2,15 +2,23 @@ import makeCards, os, ROOT, glob
 
 def main():
     
+    whathistogram = "h1_mT2LL"
+    what2Dhistogram = "h2_test"
+    what3Dhistogram = "h3_test"
+
     methods = {\
         "counting": {"folder":"./DATACARDS_counting/", "rootfiles":{}}, 
-        "shape":    {"folder":"./DATACARDS_shape/", "rootfiles":{}},
+        "1Dshape":    {"folder":"./DATACARDS_1Dshape/",    "rootfiles":{}},
+        "2Dshape":  {"folder":"./DATACARDS_2Dshape/",  "rootfiles":{}},
+        "3Dshape":  {"folder":"./DATACARDS_3Dshape/",  "rootfiles":{}},
         }
 
     for key in methods.keys():
         for f in glob.glob(methods[key]["folder"]+"*"): os.remove(f)
         print "Making the datacards, deleting all the old ones!" + '\n'
-        makeCards.main(key)
+        if (key=="counting" or key=="1Dshape"): makeCards.main(key, whathistogram)
+        elif (key=="2Dshape"):                  makeCards.main(key, what2Dhistogram)
+        elif (key=="3Dshape"):                  makeCards.main(key, what3Dhistogram)
         print "Datacards constructed" + '\n'
         os.chdir(methods[key]["folder"])
         
@@ -18,7 +26,7 @@ def main():
         datacards = [d for d in datacards if ".txt" in d]
         for datacard in datacards:
             print "Running combine function over datacard: ", datacard, '\n', '\n'
-            os.system('combine -M Asymptotic '+datacard+ ' -n -'+datacard[:-4])
+            os.system('combine -M Asymptotic '+datacard+ ' -n -'+datacard[:-4]+" --run blind")
             print '\n', '\n'
         rootfiles = os.listdir("./")
         rootfiles = [r for r in rootfiles if "higgsCombine" in r]
@@ -58,15 +66,15 @@ def main():
 
     output = open('rValues.txt','w')
     extra = ''
-    for i in range(len(methods["shape"]["rootfiles"].keys())+1): 
+    for i in range(len(methods["1Dshape"]["rootfiles"].keys())+1): 
         extra +='{'+str(i)+':^31} '
     firstline = ['r-value']
-    for rootfile in methods["shape"]["rootfiles"].keys(): 
-        rootfile.replace("higgsCombine-simple-shapes-TH1_","")
-        rootfile.replace(".Asymptotic.mH120.root", "")
+    for rootfile in methods["1Dshape"]["rootfiles"].keys(): 
+        rootfile = rootfile.replace("higgsCombine-simple-shapes-TH1_","")
+        rootfile = rootfile.replace(".Asymptotic.mH120.root", "")
         firstline.append(rootfile)
     output.write(extra.format(*firstline) + '\n')
-    for key in methods.keys():
+    for key in sorted(methods.keys()):
         line = []
         line.append(key)
         for rootfile in methods[key]["rootfiles"].keys():
