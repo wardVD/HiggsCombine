@@ -11,7 +11,7 @@ observation   274.0
 bin                 1                   1          
 process          signal            background      
 process             0                   1          
-rate           1985.010749        165692.390131    
+rate          1977.08411286       130515.279096    
 
 --------------------
 alpha	shapeN2	   -     1

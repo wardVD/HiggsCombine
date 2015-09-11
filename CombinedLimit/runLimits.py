@@ -9,8 +9,8 @@ def main():
     methods = {\
         "counting": {"folder":"./DATACARDS_counting/", "rootfiles":{}}, 
         "1Dshape":    {"folder":"./DATACARDS_1Dshape/",    "rootfiles":{}},
-        "2Dshape":  {"folder":"./DATACARDS_2Dshape/",  "rootfiles":{}},
-        "3Dshape":  {"folder":"./DATACARDS_3Dshape/",  "rootfiles":{}},
+        #"2Dshape":  {"folder":"./DATACARDS_2Dshape/",  "rootfiles":{}},
+        #"3Dshape":  {"folder":"./DATACARDS_3Dshape/",  "rootfiles":{}},
         }
 
     for key in methods.keys():
@@ -42,33 +42,33 @@ def main():
  
             limit.Draw("limit>>limit1", "quantileExpected==-1")
             limit1 = ROOT.gDirectory.Get("limit1")
-            methods[key]["rootfiles"][rootkey]["limit1"] = limit1.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit1"] = round(limit1.GetMean(),4)
             
             limit.Draw("limit>>limit2", "quantileExpected>0.02 && quantileExpected<0.03")
             limit2 = ROOT.gDirectory.Get("limit2")
-            methods[key]["rootfiles"][rootkey]["limit2"] = limit2.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit2"] = round(limit2.GetMean(),4)
             
             limit.Draw("limit>>limit16", "quantileExpected>0.15 && quantileExpected<0.16")
             limit16 = ROOT.gDirectory.Get("limit16")
-            methods[key]["rootfiles"][rootkey]["limit16"] = limit16.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit16"] = round(limit16.GetMean(),4)
             
             limit.Draw("limit>>limit50", "quantileExpected==0.5")
             limit50 = ROOT.gDirectory.Get("limit50")
-            methods[key]["rootfiles"][rootkey]["limit50"] = limit50.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit50"] = round(limit50.GetMean(),4)
             
             limit.Draw("limit>>limit84", "quantileExpected>0.83 && quantileExpected<0.94")
             limit84 = ROOT.gDirectory.Get("limit84")
-            methods[key]["rootfiles"][rootkey]["limit84"] = limit84.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit84"] = round(limit84.GetMean(),4)
             
             limit.Draw("limit>>limit97", "quantileExpected>0.97 && quantileExpected<0.98")
             limit97 = ROOT.gDirectory.Get("limit97")
-            methods[key]["rootfiles"][rootkey]["limit97"] = limit97.GetMean()
+            methods[key]["rootfiles"][rootkey]["limit97"] = round(limit97.GetMean(),4)
 
     output = open('rValues.txt','w')
     extra = ''
     for i in range(len(methods["1Dshape"]["rootfiles"].keys())+1): 
-        extra +='{'+str(i)+':^31} '
-    firstline = ['r-value']
+        extra +='{'+str(i)+':^51} '
+    firstline = ['Expected r-value']
     for rootfile in methods["1Dshape"]["rootfiles"].keys(): 
         rootfile = rootfile.replace("higgsCombine-simple-shapes-TH1_","")
         rootfile = rootfile.replace(".Asymptotic.mH120.root", "")
@@ -78,7 +78,8 @@ def main():
         line = []
         line.append(key)
         for rootfile in methods[key]["rootfiles"].keys():
-            line.append(methods[key]["rootfiles"][rootfile]["limit50"])
+            #line.append(str(methods[key]["rootfiles"][rootfile]["limit2"]) + " - " + str(methods[key]["rootfiles"][rootfile]["limit50"]) + " - " + str(methods[key]["rootfiles"][rootfile]["limit97"]))
+            line.append(str(methods[key]["rootfiles"][rootfile]["limit50"]))
         output.write(extra.format(*line)+'\n')
 
 if __name__ == "__main__":

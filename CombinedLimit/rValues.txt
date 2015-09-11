@@ -1,4 +1,3 @@
-            r-value                      T2tt_S650N325                   T2tt_S425N325          
-            1Dshape                       0.279296875                      1.8984375            
-            2Dshape                      0.00634765625                   0.01708984375          
-           counting                         42.8125                        44.90625             
+                 Expected r-value                                      T2tt_S650N325                                       T2tt_S425N325                    
+                      1Dshape                                             0.2803                                              2.0078                        
+                     counting                                             33.8125                                             35.625                        
