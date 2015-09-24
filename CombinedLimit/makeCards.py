@@ -1,25 +1,39 @@
 import os, ROOT, unrolling
 
-dir = "./histograms_42pb/"
+dir = None
 
-Histograms  = os.listdir(dir)
-signals     = [s for s in Histograms if "T2tt" in s]
-data        = [d for d in Histograms if "data" in d]
-backgrounds = [b for b in Histograms if (b not in signals and b not in data)]
+Histograms  = None
+signals     = None
+data        = None
+backgrounds = None
 
-backgrounds_string = [b[:-5] for b in backgrounds] #remove .root
+backgrounds_string = None
 
-def main(WhatToDo, HistogramToUse):
+def main(WhatToDo, HistogramToUse,lumi,directory):
+
+    global dir,Histograms,signals,data,backgrounds,backgrounds_string
+    dir = directory[0]
+
+    dir+=str(lumi)+"fb"
+
+    dir+=directory[1]
+
+    Histograms  = os.listdir(dir)
+    signals     = [s for s in Histograms if "T2tt" in s]
+    data        = [d for d in Histograms if "data" in d]
+    backgrounds = [b for b in Histograms if (b not in signals and b not in data)]
+    
+    backgrounds_string = [b[:-5] for b in backgrounds] #remove .root
 
     for signal in signals:
 
-        if WhatToDo == "counting":
+        if "counting" in WhatToDo:
             makesimplecards([signal], HistogramToUse)
-        elif WhatToDo == "1Dshape":
+        elif "1Dshape" in WhatToDo:
             makeshapecards1D([signal], HistogramToUse, "1Dshape")
-        elif WhatToDo == "2Dshape":
+        elif "2Dshape" in WhatToDo:
             makeshapecards2D([signal], HistogramToUse, "2Dshape")
-        elif WhatToDo == "3Dshape":
+        elif "3Dshape" in WhatToDo:
             makeshapecards3D([signal], HistogramToUse, "3Dshape")
         else:
             print '\n' + "Wrong input, didn't do anything." + '\n' + '\n'
@@ -31,7 +45,7 @@ def makesimplecards(signal, HistogramToUse):
     allsystematics = simplesystematic(signal)
     extra = ''
     for i in range(len(signal)+len(backgrounds)): 
-        extra +='{'+str(i)+':^19} '
+        extra +='{'+str(i)+':^31} '
     ones                        = extra.format(*([1]*(len(signal)+len(backgrounds))))
     stringSignalAndBackgrounds  = extra.format(*(signal_string+backgrounds_string))
     processline                 = extra.format(*range(len(backgrounds)+1))
@@ -176,10 +190,10 @@ def writetree(signal, HistogramToUse, WhatToDo):
     vechisto.append(sig)
 
     #UNCERTAINTY SIGNAL
-    sig_Up = StatUpOrDown(sig,"Up")
+    sig_Up = StatUpOrDown(sig,"Up",0.3)
     sig_Up.SetDirectory(0)
     sig_Up.SetName("signal_sigmaUp")
-    sig_Down = StatUpOrDown(sig,"Down")
+    sig_Down = StatUpOrDown(sig,"Down",0.3)
     sig_Down.SetDirectory(0)
     sig_Down.SetName("signal_sigmaDown")
     
@@ -218,10 +232,10 @@ def writetree(signal, HistogramToUse, WhatToDo):
     vechisto.append(backg)
 
     #UNCERTAINTY BACKGROUNDS
-    backg_Up = StatUpOrDown(backg,"Up")
+    backg_Up = StatUpOrDown(backg,"Up",0.3)
     backg_Up.SetDirectory(0)
     backg_Up.SetName("background_alphaUp")
-    backg_Down = StatUpOrDown(backg,"Down")
+    backg_Down = StatUpOrDown(backg,"Down",0.3)
     backg_Down.SetDirectory(0)
     backg_Down.SetName("background_alphaDown")
 
@@ -305,14 +319,14 @@ def shapesystematic():
         listofsyst.append(key+"\t"+syst[key]['label']+"\t"+syst[key]['string'])
     return listofsyst
 
-def StatUpOrDown(hist, UpOrDown):
+def StatUpOrDown(hist, UpOrDown,uncertainty):
     histclone = hist.Clone()
     if UpOrDown == "Up": 
         #for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1) + hist.GetBinError(bin+1))
-        for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1)*1.3)
+        for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1)*(1.+uncertainty))
     elif UpOrDown == "Down": 
         #for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1) - hist.GetBinError(bin+1))
-        for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1)*0.7)
+        for bin in range(hist.GetNbinsX()): histclone.SetBinContent(bin+1, hist.GetBinContent(bin+1)*(1.-uncertainty))
     else: print "Didn't use function properly"
     return histclone
 
