@@ -2,16 +2,22 @@ import makeCards, os, ROOT, glob
 
 def main():
 
-    directory = ["./histograms_ward_","/"]
+    #directory = ["./histograms_ward_","/"]
+    directory = ["./histograms_ward_","_met40_metsig0_njets2ormore_bnjets1ormore/"]
     
-    mt2llcut = 120
+    mt2llcut = 150
 
     lumi = 10 #in fb-1
 
     print '\n', '\n', "Running over " + str(lumi) + " fb histograms!", '\n', '\n'
 
-    #whathistogram   = "h1_mt2llcounting_mt2llcut_"+str(mt2llcut)
-    whathistogram   = "h1_mt2llcounting"+str(mt2llcut)
+    sigunc = 0.2 #20% uncertainty on signal
+
+    bkgunc = 0.25
+
+
+    whathistogram   = "h1_mt2llcounting_mt2llcut_"+str(mt2llcut)
+    #whathistogram   = "h1_mt2llcounting"+str(mt2llcut)
     what1Dhistogram = "h1_mt2ll"
     what2Dhistogram = "h2_mt2blblvsmt2ll"
     what3Dhistogram = "h3_mt2bbvsmt2blblvsmt2ll"
@@ -26,10 +32,10 @@ def main():
     for key in methods.keys():
         for f in glob.glob(methods[key]["folder"]+"*"): os.remove(f)
         print "Making the datacards, deleting all the old ones!" + '\n'
-        if (key=="0_counting (mt2ll>"+str(mt2llcut)+" GeV)" ):   makeCards.main(key, whathistogram,lumi,directory)
-        elif (key=="1_1Dshape (mt2ll)"):   makeCards.main(key, what1Dhistogram,lumi,directory)
-        elif (key=="2_2Dshape (mt2ll, mt2blbl)"):   makeCards.main(key, what2Dhistogram,lumi,directory)
-        elif (key=="3_3Dshape (mt2ll, mt2blbl, mt2bb)"):   makeCards.main(key, what3Dhistogram,lumi,directory)
+        if (key=="0_counting (mt2ll>"+str(mt2llcut)+" GeV)" ):   makeCards.main(key, whathistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="1_1Dshape (mt2ll)"):   makeCards.main(key, what1Dhistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="2_2Dshape (mt2ll, mt2blbl)"):   makeCards.main(key, what2Dhistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="3_3Dshape (mt2ll, mt2blbl, mt2bb)"):   makeCards.main(key, what3Dhistogram,lumi,directory,sigunc,bkgunc)
         print "Datacards constructed" + '\n'
         # os.chdir(methods[key]["folder"])
         

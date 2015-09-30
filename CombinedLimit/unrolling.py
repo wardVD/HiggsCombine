@@ -2,12 +2,8 @@ import ROOT
 
 def TwoD(TwoDhist):
 
-    nbinsX = TwoDhist.GetNbinsX()+1 #include overflow
-    nbinsY = TwoDhist.GetNbinsY()+1 #include overflow
-    #XrangeMin = TwoDhist.GetXaxis().GetXmin()
-    #XrangeMax = TwoDhist.GetXaxis().GetXmax()
-    #YrangeMin = TwoDhist.GetYaxis().GetXmin()
-    #YrangeMax = TwoDhist.GetYaxis().GetXmax()
+    nbinsX = TwoDhist.GetNbinsX()
+    nbinsY = TwoDhist.GetNbinsY()
 
     hout = ROOT.TH1F("","",nbinsX*nbinsY,0,nbinsX*nbinsY)
     l=1
@@ -20,9 +16,9 @@ def TwoD(TwoDhist):
 
 def ThreeD(ThreeDhist):
     
-    nbinsX = ThreeDhist.GetNbinsX()+1 #include overflow
-    nbinsY = ThreeDhist.GetNbinsY()+1 #include overflow
-    nbinsZ = ThreeDhist.GetNbinsZ()+1 #include overflow
+    nbinsX = ThreeDhist.GetNbinsX() #include overflow
+    nbinsY = ThreeDhist.GetNbinsY() #include overflow
+    nbinsZ = ThreeDhist.GetNbinsZ() #include overflow
 
     hout = ROOT.TH1F("","",nbinsX*nbinsY*nbinsZ,0,nbinsX*nbinsY*nbinsZ)
     l=1

@@ -9,14 +9,21 @@ backgrounds = None
 
 backgrounds_string = None
 
-def main(WhatToDo, HistogramToUse,lumi,directory):
+siguncertainty = None
 
-    global dir,Histograms,signals,data,backgrounds,backgrounds_string
+bkguncertainty = None
+
+def main(WhatToDo, HistogramToUse,lumi,directory,sigunc,bkgunc):
+
+    global dir,Histograms,signals,data,backgrounds,backgrounds_string, siguncertainty, bkguncertainty
+
     dir = directory[0]
 
     dir+=str(lumi)+"fb"
 
     dir+=directory[1]
+
+    print dir
 
     Histograms  = os.listdir(dir)
     signals     = [s for s in Histograms if "T2tt" in s]
@@ -24,6 +31,9 @@ def main(WhatToDo, HistogramToUse,lumi,directory):
     backgrounds = [b for b in Histograms if (b not in signals and b not in data)]
     
     backgrounds_string = [b[:-5] for b in backgrounds] #remove .root
+
+    siguncertainty = sigunc
+    bkguncertainty = bkgunc
 
     for signal in signals:
 
@@ -190,10 +200,10 @@ def writetree(signal, HistogramToUse, WhatToDo):
     vechisto.append(sig)
 
     #UNCERTAINTY SIGNAL
-    sig_Up = StatUpOrDown(sig,"Up",0.3)
+    sig_Up = StatUpOrDown(sig,"Up",siguncertainty)
     sig_Up.SetDirectory(0)
     sig_Up.SetName("signal_sigmaUp")
-    sig_Down = StatUpOrDown(sig,"Down",0.3)
+    sig_Down = StatUpOrDown(sig,"Down",siguncertainty)
     sig_Down.SetDirectory(0)
     sig_Down.SetName("signal_sigmaDown")
     
@@ -232,10 +242,10 @@ def writetree(signal, HistogramToUse, WhatToDo):
     vechisto.append(backg)
 
     #UNCERTAINTY BACKGROUNDS
-    backg_Up = StatUpOrDown(backg,"Up",0.3)
+    backg_Up = StatUpOrDown(backg,"Up",bkguncertainty)
     backg_Up.SetDirectory(0)
     backg_Up.SetName("background_alphaUp")
-    backg_Down = StatUpOrDown(backg,"Down",0.3)
+    backg_Down = StatUpOrDown(backg,"Down",bkguncertainty)
     backg_Down.SetDirectory(0)
     backg_Down.SetName("background_alphaDown")
 
@@ -286,19 +296,19 @@ def getshaperates(rootfile):
 def simplesystematic(signal):
     listofsyst = [] 
     syst = {\
-        'lumi':   {'label':'lnN','string':"   " },
+        #'lumi':   {'label':'lnN','string':"   " },
         'bkg':    {'label':'lnN','string':"   " },
         'signal': {'label':'lnN','string':"   " },
         }
     
     for s in signal+backgrounds:
-        syst['lumi']['string']+="1.12   "
+        #syst['lumi']['string']+="1.12   "
         if s in backgrounds: 
-            syst['bkg']['string']+="1.3  "
+            syst['bkg']['string']+=str(1+bkguncertainty)+"  "
             syst['signal']['string']+="-   "
         else:
             syst['bkg']['string']+= "-   "
-            syst['signal']['string']+="1.2   "
+            syst['signal']['string']+=str(1+siguncertainty)+"   "
     for key in syst.keys():
         listofsyst.append(key+"\t"+syst[key]['label']+"\t"+syst[key]['string'])
     return listofsyst
@@ -306,12 +316,12 @@ def simplesystematic(signal):
 def shapesystematic():
     listofsyst = [] 
     syst = {\
-        'lumi':   {'label':'lnN','string':"   " },
+        #'lumi':   {'label':'lnN','string':"   " },
         'alpha':  {'label':'shapeN2','string': "   "},
         'sigma':  {'label':'shapeN2','string': "   "},
         }
     
-    syst['lumi']['string']+="1.12   1.12"
+    #syst['lumi']['string']+="1.12   1.12"
     syst['alpha']['string']+="-     1"
     syst['sigma']['string']+="1     -"
 
