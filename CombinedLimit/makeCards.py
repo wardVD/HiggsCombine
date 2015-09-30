@@ -17,13 +17,7 @@ def main(WhatToDo, HistogramToUse,lumi,directory,sigunc,bkgunc):
 
     global dir,Histograms,signals,data,backgrounds,backgrounds_string, siguncertainty, bkguncertainty
 
-    dir = directory[0]
-
-    dir+=str(lumi)+"fb"
-
-    dir+=directory[1]
-
-    print dir
+    dir = directory
 
     Histograms  = os.listdir(dir)
     signals     = [s for s in Histograms if "T2tt" in s]
@@ -58,6 +52,7 @@ def makesimplecards(signal, HistogramToUse):
         extra +='{'+str(i)+':^31} '
     ones                        = extra.format(*([1]*(len(signal)+len(backgrounds))))
     stringSignalAndBackgrounds  = extra.format(*(signal_string+backgrounds_string))
+
     processline                 = extra.format(*range(len(backgrounds)+1))
     rates                       = extra.format(*getsimplerates(signal, HistogramToUse))
     #start writing

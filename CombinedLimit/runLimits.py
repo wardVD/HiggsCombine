@@ -1,10 +1,11 @@
 import makeCards, os, ROOT, glob
 
 def main():
-
-    #directory = ["./histograms_ward_","/"]
-    directory = ["./histograms_ward_","_met40_metsig0_njets2ormore_bnjets1ormore/"]
     
+    #directory where your histrograms are stored
+    directory = "./histograms_ward_10fb_met40_metsig0_njets2ormore_bnjets1ormore_dphi0.25/"
+    
+    #mt2llcut for the CNC
     mt2llcut = 150
 
     lumi = 10 #in fb-1
@@ -21,6 +22,7 @@ def main():
     what1Dhistogram = "h1_mt2ll"
     what2Dhistogram = "h2_mt2blblvsmt2ll"
     what3Dhistogram = "h3_mt2bbvsmt2blblvsmt2ll"
+
 
     methods = {\
         "0_counting (mt2ll>"+str(mt2llcut)+" GeV)": {"folder":"./DATACARDS_counting/", "rootfiles":{}}, 
