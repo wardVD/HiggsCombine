@@ -1,7 +1,8 @@
 import ROOT
 
-dir = "./DATACARDS_2Dshape/"
-file = "simple-shapes-TH2_SMS_T2tt_2J_mStop650_mLSP325.root"
+dir = "./DATACARDS_3Dshape/"
+#dir = './stuff_met80_metsig5_njets2ormore_bnjets1ormore_dphi0.25/DATACARDS_3Dshape/'
+file = "simple-shapes-TH3_SMS_T2tt_2J_mStop650_mLSP325.root"
 
 def main():
     f = ROOT.TFile.Open(dir+file,"read")

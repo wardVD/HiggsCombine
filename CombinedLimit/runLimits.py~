@@ -1,35 +1,46 @@
 import makeCards, os, ROOT, glob
 
 def main():
-
-    directory = ["./histograms_ward_","_met100_metsig4/"]
     
-    mt2llcut = 120
+    #directory where your histrograms are stored
+    #directory = "./histograms_ward_10fb_met140_metsig8_njets2ormore_bnjets1ormore_dphi0.25/"
+    #directory = "./histograms_ward_10fb_met80_metsig5_njets2ormore_bnjets1ormore_dphi0.25/"
+    #directory = "./histograms_ward_10fb_met40_metsig0_njets2ormore_bnjets1ormore_dphi0.25/"
+    directory = "./histograms_40/"
+
+    #mt2llcut for the CNC
+    mt2llcut = 100
 
     lumi = 10 #in fb-1
 
     print '\n', '\n', "Running over " + str(lumi) + " fb histograms!", '\n', '\n'
 
-    #whathistogram   = "h1_mt2llcounting_mt2llcut_"+str(mt2llcut)
-    whathistogram = "h1_mt2ll"
+    sigunc = 0.2 #20% uncertainty on signal
+
+    bkgunc = 0.25
+
+
+    whathistogram   = "h1_mt2llcounting_mt2llcut_"+str(mt2llcut)
+    #whathistogram   = "h1_mt2llcounting"+str(mt2llcut)
     what1Dhistogram = "h1_mt2ll"
     what2Dhistogram = "h2_mt2blblvsmt2ll"
     what3Dhistogram = "h3_mt2bbvsmt2blblvsmt2ll"
 
+
     methods = {\
         "0_counting (mt2ll>"+str(mt2llcut)+" GeV)": {"folder":"./DATACARDS_counting/", "rootfiles":{}}, 
-        #"1_1Dshape (mt2ll)":                        {"folder":"./DATACARDS_1Dshape/",  "rootfiles":{}},
-        #"2_2Dshape (mt2ll, mt2blbl)":               {"folder":"./DATACARDS_2Dshape/",  "rootfiles":{}},
-        #"3_3Dshape (mt2ll, mt2blbl, mt2bb)":        {"folder":"./DATACARDS_3Dshape/",  "rootfiles":{}},
+        "1_1Dshape (mt2ll)":                        {"folder":"./DATACARDS_1Dshape/",  "rootfiles":{}},
+        "2_2Dshape (mt2ll, mt2blbl)":               {"folder":"./DATACARDS_2Dshape/",  "rootfiles":{}},
+        "3_3Dshape (mt2ll, mt2blbl, mt2bb)":        {"folder":"./DATACARDS_3Dshape/",  "rootfiles":{}},
         }
 
     for key in methods.keys():
         for f in glob.glob(methods[key]["folder"]+"*"): os.remove(f)
         print "Making the datacards, deleting all the old ones!" + '\n'
-        if (key=="0_counting (mt2ll>"+str(mt2llcut)+" GeV)" ):   makeCards.main(key, whathistogram,lumi,directory)
-        elif (key=="1_1Dshape (mt2ll)"):   makeCards.main(key, what1Dhistogram,lumi,directory)
-        elif (key=="2_2Dshape (mt2ll, mt2blbl)"):   makeCards.main(key, what2Dhistogram,lumi,directory)
-        elif (key=="3_3Dshape (mt2ll, mt2blbl, mt2bb)"):   makeCards.main(key, what3Dhistogram,lumi,directory)
+        if (key=="0_counting (mt2ll>"+str(mt2llcut)+" GeV)" ):   makeCards.main(key, whathistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="1_1Dshape (mt2ll)"):   makeCards.main(key, what1Dhistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="2_2Dshape (mt2ll, mt2blbl)"):   makeCards.main(key, what2Dhistogram,lumi,directory,sigunc,bkgunc)
+        elif (key=="3_3Dshape (mt2ll, mt2blbl, mt2bb)"):   makeCards.main(key, what3Dhistogram,lumi,directory,sigunc,bkgunc)
         print "Datacards constructed" + '\n'
         os.chdir(methods[key]["folder"])
         
